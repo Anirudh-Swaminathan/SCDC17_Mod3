@@ -1,0 +1,8 @@
+# Ignore the config file
+config.ini
+
+# Ignore all .pyc files
+*.pyc
+
+# Ignore files used for testing
+serial_1.py
