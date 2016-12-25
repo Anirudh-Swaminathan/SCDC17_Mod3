@@ -1,6 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
+var path = require('path');
+var CryptoJS = require("crypto-js");
+var config = require(path.join(__dirname + "/../" + "config/config"));
+
 /* GET data page. */
 router.get('/', function(req, res, next) {
     var conn = req.app.locals.connection;
@@ -21,7 +25,10 @@ router.get('/', function(req, res, next) {
 
             response.ret = {};
             var data = rows[0];
-            response.ret = data;
+            var str_data = JSON.stringify(data);
+            console.log(str_data);
+            var encData = encryptString(str_data);
+            response.ret = encData;
         }
 
         res.send(JSON.stringify(response));
@@ -30,5 +37,17 @@ router.get('/', function(req, res, next) {
         console.log("\n");
     });
 });
+
+function encryptString(stringToEncrypt) {
+    encK = config.encKey;
+    encI = config.encIv;
+
+    var rkEncryptionKey = CryptoJS.enc.Base64.parse(encK);
+    var rkEncryptionIv = CryptoJS.enc.Base64.parse(encI);
+
+    var utf8Stringified = CryptoJS.enc.Utf8.parse(stringToEncrypt);
+    var encrypted = CryptoJS.AES.encrypt(utf8Stringified.toString(), rkEncryptionKey, {mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7, iv: rkEncryptionIv});
+    return encrypted.ciphertext.toString(CryptoJS.enc.Base64);
+}
 
 module.exports = router;
