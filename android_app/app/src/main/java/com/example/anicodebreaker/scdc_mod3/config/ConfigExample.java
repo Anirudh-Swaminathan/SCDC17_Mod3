@@ -1,4 +1,4 @@
-package com.example.anicodebreaker.scdc_mod3.Config;
+package com.example.anicodebreaker.scdc_mod3.config;
 
 /**
  * Created by anicodebreaker on 26/12/16.

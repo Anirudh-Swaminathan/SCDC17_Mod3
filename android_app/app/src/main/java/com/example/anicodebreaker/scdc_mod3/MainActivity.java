@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.example.anicodebreaker.scdc_mod3.Config.Config;
+import com.example.anicodebreaker.scdc_mod3.config.Config;
 import com.example.anicodebreaker.scdc_mod3.adapters.CustomGridAdapter;
 import com.example.anicodebreaker.scdc_mod3.model.HealthData;
 import com.example.anicodebreaker.scdc_mod3.rest.ApiClient;
