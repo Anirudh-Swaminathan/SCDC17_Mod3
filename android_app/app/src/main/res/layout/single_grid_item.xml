@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/titGrid"
+        android:layout_width="140dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="Sample Heading"
+        android:textAlignment="center"
+        android:textAppearance="@android:style/TextAppearance.Material.Title"
+        tools:targetApi="lollipop" />
+
+    <TextView
+        android:id="@+id/datGrid"
+        android:layout_width="140dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="Sample Data"
+        android:textAlignment="center"
+        android:textAppearance="@android:style/TextAppearance.Material.Subhead"
+        tools:targetApi="lollipop" />
+</LinearLayout>

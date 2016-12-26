@@ -3,6 +3,7 @@ var router = express.Router();
 
 var path = require('path');
 var CryptoJS = require("crypto-js");
+var crypto = require('crypto');
 var config = require(path.join(__dirname + "/../" + "config/config"));
 
 /* GET data page. */
@@ -12,6 +13,7 @@ router.get('/', function(req, res, next) {
     conn.query("select glu, temp, hrt, bp from scdc_m3 where id=(select max(id) from scdc_m3) limit 1;", function(err, rows, fields){
         var response = {};
         if(err) {
+            // If there were errors in the query process
             response.msg = 500;
 
             response.errors = {};
@@ -19,6 +21,7 @@ router.get('/', function(req, res, next) {
 
             response.ret = {};
         } else {
+            // Response is success
             response.msg = 200;
 
             response.errors = {};
@@ -38,16 +41,17 @@ router.get('/', function(req, res, next) {
     });
 });
 
+/**
+* A function to encrypt the response
+* @param stringToEncrypt is the string to encrypt :-P
+* @return the encrypted response to be sent to the API
+*/
 function encryptString(stringToEncrypt) {
-    encK = config.encKey;
-    encI = config.encIv;
-
-    var rkEncryptionKey = CryptoJS.enc.Base64.parse(encK);
-    var rkEncryptionIv = CryptoJS.enc.Base64.parse(encI);
-
-    var utf8Stringified = CryptoJS.enc.Utf8.parse(stringToEncrypt);
-    var encrypted = CryptoJS.AES.encrypt(utf8Stringified.toString(), rkEncryptionKey, {mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7, iv: rkEncryptionIv});
-    return encrypted.ciphertext.toString(CryptoJS.enc.Base64);
+    var key = config.encKey;
+    var cipher = crypto.createCipher('aes-128-ecb',key);
+    var crypted = cipher.update(stringToEncrypt,'utf-8','hex')
+    crypted += cipher.final('hex');
+    return crypted;
 }
 
 module.exports = router;
