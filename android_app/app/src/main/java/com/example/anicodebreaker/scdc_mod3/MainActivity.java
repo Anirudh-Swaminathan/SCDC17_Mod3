@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -110,7 +111,15 @@ public class MainActivity extends AppCompatActivity {
                 showDiag();
             }
         });
-        // TODO: Create a recommender system for diet based on the data given through the API
+
+        aniGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CustomGridAdapter.ViewHolder holder = (CustomGridAdapter.ViewHolder) view.getTag();
+                String v = holder.d.getText().toString();
+                showGridDiag(position, v);
+            }
+        });
     }
 
     @Override
@@ -245,6 +254,7 @@ public class MainActivity extends AppCompatActivity {
 
         int smiley = 0x1F603;
         int goodJob = 0x1F60A;
+        int ribbit = 0x1F61C;
 
         buff.append("You have:\n\n");
         double val;
@@ -259,9 +269,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case 1:
                     if(val>Config.HIGH_T)
-                        buff.append("High Temperature - Avoid spicy foods, use coconut oil for cooking\n OR - You have a fever :-P\n\n");
+                        buff.append("High Temperature - Avoid spicy foods, use coconut oil for cooking\n OR - You have a fever "+getEmojiByUnicode(ribbit)+"\n\n");
                     else if (val<Config.LOW_T)
-                        buff.append("Low Temperature - Eat soups, drink ice water, peanuts\n Or you have hypothermia :-P\n\n");
+                        buff.append("Low Temperature - Eat soups, drink ice water, peanuts\n Or you have hypothermia "+getEmojiByUnicode(ribbit)+"\n\n");
                     break;
                 case 2:
                     if(val>Config.HIGH_H)
@@ -278,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         String msg = buff.toString();
-        if (msg.equals("")) {
+        if (msg.equals("You have:\n\n")) {
             buff.delete(0, buff.length());
             buff.append("You are completely all right. Keep up the good work "+getEmojiByUnicode(goodJob)+"\n\n");
         }
@@ -292,6 +302,71 @@ public class MainActivity extends AppCompatActivity {
         });
         AlertDialog alert = abu.create();
         alert.setTitle("DIAGNOSIS - Diet To Follow "+getEmojiByUnicode(smiley));
+        alert.show();
+    }
+
+    /**
+     * Onlick handler for gridview item
+     * @param pos the position of the gridview item clicked
+     */
+    private void showGridDiag(int pos, String v) {
+        StringBuffer buff = new StringBuffer();
+        String title = "";
+
+        int goodJob = 0x1F60A;
+        int degree = 0x00B0;
+
+        buff.append("You have:\n\n");
+        double val = Double.parseDouble(v);
+
+        switch (pos) {
+            case 0:
+                title = "Sugar Level";
+                if (val>Config.HIGH_G)
+                    buff.append("High Sugar\nNormal value is between "+Double.toString(Config.LOW_G)+" and "+Double.toString(Config.HIGH_G)+" mg/dl\n");
+                else if (val<Config.LOW_G)
+                    buff.append("Low Sugar\nNormal value is between "+Double.toString(Config.LOW_G)+" and "+Double.toString(Config.HIGH_G)+" mg/dl\n");
+                else
+                    buff.append("Normal Sugar Levels. Keep up the good work "+getEmojiByUnicode(goodJob));
+                break;
+            case 1:
+                title = "Body Temperature";
+                if (val>Config.HIGH_T)
+                    buff.append("High Body Temperature\nNormal value is between "+Double.toString(Config.LOW_T)+" and "+Double.toString(Config.HIGH_T)+" "+getEmojiByUnicode(degree)+"C\n");
+                else if (val<Config.LOW_T)
+                    buff.append("Low Body Temperature\nNormal value is between "+Double.toString(Config.LOW_T)+" and "+Double.toString(Config.HIGH_T)+" "+getEmojiByUnicode(degree)+"C\n");
+                else
+                    buff.append("Normal Temperature Levels. Keep up the good work "+getEmojiByUnicode(goodJob));
+                break;
+            case 2:
+                title = "Heart Rate";
+                if (val>Config.HIGH_H)
+                    buff.append("High Heart Rate\nNormal value is between "+Double.toString(Config.LOW_H)+" and "+Double.toString(Config.HIGH_H)+" bpm\n");
+                else if (val<Config.LOW_H)
+                    buff.append("Low Heart Rate\nNormal value is between "+Double.toString(Config.LOW_H)+" and "+Double.toString(Config.HIGH_H)+" bpm\n");
+                else
+                    buff.append("Normal Heart Rate. Keep up the good work "+getEmojiByUnicode(goodJob));
+                break;
+            case 3:
+                title = "Blood Pressure";
+                if (val>Config.HIGH_B)
+                    buff.append("High Blood Pressure\nNormal value is between "+Double.toString(Config.LOW_B)+" and "+Double.toString(Config.HIGH_B)+"\n");
+                else if (val<Config.LOW_B)
+                    buff.append("Low Blood Pressure\nNormal value is between "+Double.toString(Config.LOW_B)+" and "+Double.toString(Config.HIGH_B)+"\n");
+                else
+                    buff.append("Normal Blood Pressure. Keep up the good work "+getEmojiByUnicode(goodJob));
+                break;
+        }
+
+        AlertDialog.Builder abu= new AlertDialog.Builder(MainActivity.this);
+        abu.setMessage(buff.toString()).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = abu.create();
+        alert.setTitle(title);
         alert.show();
     }
 

@@ -19,19 +19,26 @@ router.get('/', function(req, res, next) {
             response.errors = {};
             response.errors.msg = "SQL Error";
 
-            response.ret = {};
+            response.ret = '';
         } else {
-            // Response is success
-            response.msg = 200;
+            if(rows.length == 0) {
+                response.msg = 500;
+                response.errors = {};
+                response.errors.msg = "No Data Recorded yet";
+                response.ret = '';
+            } else {
+                // Response is success
+                response.msg = 200;
 
-            response.errors = {};
+                response.errors = {};
 
-            response.ret = {};
-            var data = rows[0];
-            var str_data = JSON.stringify(data);
-            console.log(str_data);
-            var encData = encryptString(str_data);
-            response.ret = encData;
+                response.ret = {};
+                var data = rows[0];
+                var str_data = JSON.stringify(data);
+                console.log(str_data);
+                var encData = encryptString(str_data);
+                response.ret = encData;
+            }
         }
 
         res.send(JSON.stringify(response));
@@ -49,7 +56,7 @@ router.get('/', function(req, res, next) {
 function encryptString(stringToEncrypt) {
     var key = config.encKey;
     var cipher = crypto.createCipher('aes-128-ecb',key);
-    var crypted = cipher.update(stringToEncrypt,'utf-8','hex')
+    var crypted = cipher.update(stringToEncrypt,'utf-8','hex');
     crypted += cipher.final('hex');
     return crypted;
 }

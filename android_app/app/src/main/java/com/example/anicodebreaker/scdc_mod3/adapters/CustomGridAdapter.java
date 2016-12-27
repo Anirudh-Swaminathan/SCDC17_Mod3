@@ -48,8 +48,8 @@ public class CustomGridAdapter extends BaseAdapter {
     }
 
     // a class ro hold views to refresh the gridview, to improve perfromance of the app
-    class ViewHolder {
-        TextView t,d;
+    public class ViewHolder {
+        public TextView t,d;
         ViewHolder(View v) {
             t = (TextView) v.findViewById(R.id.titGrid);
             d = (TextView) v.findViewById(R.id.datGrid);
