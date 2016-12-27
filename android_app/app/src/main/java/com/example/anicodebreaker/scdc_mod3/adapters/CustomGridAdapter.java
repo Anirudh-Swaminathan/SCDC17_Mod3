@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.anicodebreaker.scdc_mod3.R;
+import com.example.anicodebreaker.scdc_mod3.config.Config;
 import com.example.anicodebreaker.scdc_mod3.model.DataGrid;
 
 import java.util.ArrayList;
@@ -68,9 +69,36 @@ public class CustomGridAdapter extends BaseAdapter {
             holder = (ViewHolder) row.getTag();
         }
 
+        /*
         Random rnd = new Random();
         int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
         row.setBackgroundColor(color);
+        */
+
+        double val = Double.parseDouble(datas.get(position).getDataG());
+        // color setting code
+        switch(position) {
+            case 0:
+                if (val<= Config.HIGH_G && val>=Config.LOW_G) row.setBackgroundColor(this.ctx.getResources().getColor(R.color.normVal));
+                else row.setBackgroundColor(this.ctx.getResources().getColor(R.color.abNormVal));
+                break;
+            case 1:
+                if (val<= Config.HIGH_T && val>=Config.LOW_T) row.setBackgroundColor(this.ctx.getResources().getColor(R.color.normVal));
+                else row.setBackgroundColor(this.ctx.getResources().getColor(R.color.abNormVal));
+                break;
+            case 2:
+                if (val<= Config.HIGH_H && val>=Config.LOW_H) row.setBackgroundColor(this.ctx.getResources().getColor(R.color.normVal));
+                else row.setBackgroundColor(this.ctx.getResources().getColor(R.color.abNormVal));
+                break;
+            case 3:
+                if (val<= Config.HIGH_B && val>=Config.LOW_B) row.setBackgroundColor(this.ctx.getResources().getColor(R.color.normVal));
+                else row.setBackgroundColor(this.ctx.getResources().getColor(R.color.abNormVal));
+                break;
+            default:
+                Random rnd = new Random();
+                int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+                row.setBackgroundColor(color);
+        }
 
         DataGrid dt = datas.get(position);
 
