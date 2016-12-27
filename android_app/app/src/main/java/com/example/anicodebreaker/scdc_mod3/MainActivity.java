@@ -1,8 +1,10 @@
 package com.example.anicodebreaker.scdc_mod3;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -100,6 +102,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 getData();
+            }
+        });
+        (findViewById(R.id.diagBtn)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDiag();
             }
         });
         // TODO: Create a recommender system for diet based on the data given through the API
@@ -227,5 +235,72 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
 
         return ret;
+    }
+
+    /**
+     * Function to show diagnosis on the press of a button
+     */
+    private void showDiag() {
+        StringBuffer buff = new StringBuffer();
+
+        int smiley = 0x1F603;
+        int goodJob = 0x1F60A;
+
+        buff.append("You have:\n\n");
+        double val;
+        for (int i = 0; i < dataGrid.length; ++i) {
+            val = Double.parseDouble(dataGrid[i]);
+            switch (i) {
+                case 0:
+                    if (val>Config.HIGH_G)
+                        buff.append("High Sugar - Raw cooked , roasted vegetables and low calorie drink\n\n");
+                    else if (val<Config.LOW_G)
+                        buff.append("Low Sugar - Don't skip meals, include snacks too , eat protein rich foods\n\n");
+                    break;
+                case 1:
+                    if(val>Config.HIGH_T)
+                        buff.append("High Temperature - Avoid spicy foods, use coconut oil for cooking\n OR - You have a fever :-P\n\n");
+                    else if (val<Config.LOW_T)
+                        buff.append("Low Temperature - Eat soups, drink ice water, peanuts\n Or you have hypothermia :-P\n\n");
+                    break;
+                case 2:
+                    if(val>Config.HIGH_H)
+                        buff.append("High Heart Rate - Eat food rich in magnesium, calcium and include fibres\n\n");
+                    else if (val<Config.LOW_H)
+                        buff.append("Low Heart Rate - Include fruits, vegetables, grains etc.\n\n");
+                    break;
+                case 3:
+                    if(val>Config.HIGH_B)
+                        buff.append("High BP - Reduce salt to your diet. Drink more fluids\n\n");
+                    else if (val<Config.LOW_B)
+                        buff.append("Low BP - Drink raw beetroot juice, strong black coffee everyday\n\n");
+                    break;
+            }
+        }
+        String msg = buff.toString();
+        if (msg.equals("")) {
+            buff.delete(0, buff.length());
+            buff.append("You are completely all right. Keep up the good work "+getEmojiByUnicode(goodJob)+"\n\n");
+        }
+
+        AlertDialog.Builder abu= new AlertDialog.Builder(MainActivity.this);
+        abu.setMessage(buff.toString()).setCancelable(false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = abu.create();
+        alert.setTitle("DIAGNOSIS - Diet To Follow "+getEmojiByUnicode(smiley));
+        alert.show();
+    }
+
+    /**
+     * Convert unicode to be displayed as an emoji
+     * @param unicode to be converted to text
+     * @return text version of emoji
+     */
+    public String getEmojiByUnicode(int unicode){
+        return new String(Character.toChars(unicode));
     }
 }
